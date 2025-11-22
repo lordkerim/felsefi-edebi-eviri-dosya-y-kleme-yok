@@ -1,0 +1,8 @@
+{
+  "name": "Copy of PhiloTrans",
+  "description": "A philosophical literary translation and visualization tool utilizing advanced Gemini models for deep context preservation.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
