@@ -1,5 +1,5 @@
 {
-  "name": "Copy of PhiloTrans",
+  "name": "Nelaks Translate",
   "description": "A philosophical literary translation and visualization tool utilizing advanced Gemini models for deep context preservation.",
   "requestFramePermissions": [
     "camera",

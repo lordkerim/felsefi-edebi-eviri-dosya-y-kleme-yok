@@ -3,7 +3,25 @@ import { AppMode } from './types';
 import TranslationPanel from './components/TranslationPanel';
 import ImageAnalysisPanel from './components/ImageAnalysisPanel';
 import ImageGenerationPanel from './components/ImageGenerationPanel';
-import { Languages, Image, PenTool, Feather } from 'lucide-react';
+import { Languages, Image, PenTool } from 'lucide-react';
+
+const NelaksLogo = ({ size = 24, className = "" }: { size?: number, className?: string }) => (
+  <svg 
+    width={size} 
+    height={size} 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    stroke="currentColor" 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round" 
+    className={className}
+  >
+    <path d="M12 4v16" />
+    <path d="M4 12h16" />
+    <circle cx="12" cy="12" r="5" />
+  </svg>
+);
 
 const App: React.FC = () => {
   const [mode, setMode] = useState<AppMode>(AppMode.TRANSLATE);
@@ -28,10 +46,10 @@ const App: React.FC = () => {
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-amber-900 rounded-lg flex items-center justify-center text-amber-100">
-              <Feather size={18} />
+              <NelaksLogo size={20} />
             </div>
             <h1 className="text-xl font-serif font-bold tracking-wide text-stone-100">
-              Philo<span className="text-amber-700">Trans</span>
+              Nelaks <span className="text-amber-700">Translate</span>
             </h1>
           </div>
           

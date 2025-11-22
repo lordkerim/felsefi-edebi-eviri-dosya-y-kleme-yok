@@ -12,9 +12,10 @@ const getAiClient = () => {
   return new GoogleGenAI({ apiKey });
 };
 
-// --- Text Translation ---
-export const translateText = async (
+// --- Text/Document Translation ---
+export const translateContent = async (
   text: string,
+  attachment: { mimeType: string; data: string } | null,
   speed: TranslationSpeed
 ): Promise<{ translation: string; groundingUrls?: string[] }> => {
   const ai = getAiClient();
@@ -31,19 +32,33 @@ export const translateText = async (
     config.thinkingConfig = { thinkingBudget: 32768 };
   }
 
-  // If we want accurate term definitions, we might use Google Search for Flash models
-  // But for translation specifically, the prompt asked for Flash Lite for speed or Pro for thinking.
-  // We'll add search grounding only if it's NOT deep mode to help with terms, 
-  // or purely rely on model knowledge. 
-  // However, the prompt "Use Google Search data... where relevant" implies we should enable it.
-  // Flash Lite doesn't support tools heavily. Let's stick to standard generation for Lite.
-  // Let's add grounding to the 'Deep' mode if needed, but Thinking is usually better for reasoning.
-  // Let's use Search Grounding via a separate helper if the user asks for term definitions specifically.
-  
   try {
+    let contents;
+    if (attachment) {
+        contents = {
+            parts: [
+                {
+                    inlineData: {
+                        mimeType: attachment.mimeType,
+                        data: attachment.data
+                    }
+                },
+                {
+                    text: `Translate the attached document from English to Turkish (or vice versa based on detection). Preserve philosophical nuance.\n\nContext/Instructions from user: ${text}`
+                }
+            ]
+        };
+    } else {
+        contents = {
+            parts: [{
+                text: `Translate the following text from English to Turkish (or vice versa based on detection). Preserve philosophical nuance.\n\n${text}`
+            }]
+        };
+    }
+
     const response = await ai.models.generateContent({
       model,
-      contents: `Translate the following text from English to Turkish (or vice versa based on detection). Preserve philosophical nuance.\n\n${text}`,
+      contents,
       config,
     });
 
@@ -56,6 +71,9 @@ export const translateText = async (
     throw error;
   }
 };
+
+// Backwards compatibility wrapper if needed, or just export this.
+export const translateText = (text: string, speed: TranslationSpeed) => translateContent(text, null, speed);
 
 // --- Term Definition (Grounding) ---
 export const defineTerm = async (term: string) => {
